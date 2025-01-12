@@ -110,15 +110,5 @@ The request body must be sent in JSON format and include the following fields:
 
 ---
 
-## Example cURL Request
-```bash
-curl -X POST \
-  -H "Content-Type: application/json" \
-  -d '{
-    "fullname": { "firstname": "John", "lastname": "Doe" },
-    "email": "john.doe@example.com",
-    "password": "securepassword"
-  }' \
-  http://localhost:5000/users/register
-```
+
 
