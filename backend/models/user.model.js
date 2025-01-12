@@ -26,7 +26,7 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true,
         minlength:[6, `Password must be atleast 6 character long.`],
-        select:false,               // when we find user this particular field will not be  passed over there
+        select:false,               // jb bhi hum user pe query lgate h toh hume password nhi milega
    },
    socketId:{
         type:String,

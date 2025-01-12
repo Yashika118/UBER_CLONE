@@ -1,9 +1,11 @@
 import express from "express"
 import { body } from "express-validator";
-import { registerUser } from "../controllers/user.controller.js";
+import { loginUser, registerUser } from "../controllers/user.controller.js";
 
 const router=express.Router();
 
+
+// register
 router.post("/register",[
 
     // body k andr jo email aaega usko validate krenge ki
@@ -15,8 +17,18 @@ router.post("/register",[
 
 ],registerUser);
 
-
 // here we only checks that condition is true or false but we don't perform any action on them
 // actions are performed in regiterUser controller using validationResult
+
+
+// login
+router.post("/login",[
+    body('email').isEmail().withMessage("Invalid email"),
+    body("password").isLength({min:6}).withMessage("Password must be atleast 6 character long.")
+],loginUser);
+
+
+
+
 
 export default router;
