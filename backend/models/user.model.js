@@ -25,7 +25,7 @@ const userSchema=new mongoose.Schema({
    password:{
         type:String,
         required:true,
-        minlength:[5, `Password must be atleast 5 character long.`],
+        minlength:[6, `Password must be atleast 6 character long.`],
         select:false,               // when we find user this particular field will not be  passed over there
    },
    socketId:{
@@ -45,7 +45,7 @@ userSchema.methods.comparePassword=async function(password){
     return await bcrypt.compare(password,this.password);
 }
 
-userSchema.statics.hashedPassword=async function(password){
+userSchema.statics.hashPassword=async function(password){
     return await bcrypt.hash(password,10);
 }
 
