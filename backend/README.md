@@ -1,35 +1,32 @@
-# API Documentation for `/users/register` Endpoint
+# Backend API Documentation 
 
-## Endpoint Description
+## `/users/register` Endpoint
+
+### Endpoint Description
 The `/users/register` endpoint allows new users to register by providing their details, including their full name, email, and password. The endpoint validates the input data and creates a new user in the system.
 
 ---
 
-## HTTP Method
+### HTTP Method
 `POST`
 
 ---
 
-## Endpoint URL
-`/users/register`
-
----
-
-## Request Body Format
+### Request Body Format
 The request body must be sent in JSON format and include the following fields:
 
-### Required Fields
-| Field               | Type   | Description                                    |
+#### Required Fields
+| Field               | Type   |Description                                     |
 |---------------------|--------|------------------------------------------------|
 | `fullname.firstname`| String | The first name of the user (min. 3 characters).|
 | `fullname.lastname` | String | The last name of the user (optional).          |
 | `email`             | String | The email address of the user (valid format).  |
 | `password`          | String | The password for the user (min. 6 characters). |
 
-### Example Request Body
+#### Example Request Body
 ```json
 {
-  "fullname": { 
+  "fullname": {
     "firstname": "John",
     "lastname": "Doe"
   },
@@ -40,9 +37,9 @@ The request body must be sent in JSON format and include the following fields:
 
 ---
 
-## Response
+### Response
 
-### Success Response
+#### Success Response
 - **Status Code:** `201 Created`
 - **Description:** The user has been successfully registered.
 - **Response Body:**
@@ -60,7 +57,7 @@ The request body must be sent in JSON format and include the following fields:
 }
 ```
 
-### Error Responses
+#### Error Responses
 
 1. **Validation Error:**
    - **Status Code:** `400 Bad Request`
@@ -97,18 +94,109 @@ The request body must be sent in JSON format and include the following fields:
 
 ---
 
-## Notes
+### Notes
 - **Token Generation:** The response includes an authentication token for the user to access secure endpoints.
 - **Error Handling:** All errors include a descriptive message to help debug issues.
 
 ---
 
-## Usage Instructions
-- Use a tool like Postman or cURL to test this endpoint.
-- Ensure the request body is properly formatted in JSON.
-- Include required fields to avoid validation errors.
+
 
 ---
 
+## `/users/login` Endpoint
+
+### Endpoint Description
+The `/users/login` endpoint allows users to authenticate by providing their email and password. The endpoint validates the credentials and returns a token upon successful login.
+
+---
+
+### HTTP Method
+`POST`
+
+---
+
+
+### Request Body Format
+The request body must be sent in JSON format and include the following fields:
+
+#### Required Fields
+| Field   | Type   | Description                                     |
+|---------|--------|-------------------------------------------------|
+| `email` | String | The email address of the user (valid format).   |
+| `password`| String | The password for the user (min. 6 characters).|
+
+#### Example Request Body
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "securepassword"
+}
+```
+
+---
+
+### Response
+
+#### Success Response
+- **Status Code:** `200 OK`
+- **Description:** User successfully logged in.
+- **Response Body:**
+
+```json
+{
+  "message": "Login successful",
+  "token": "<auth_token>",
+  "user": {
+    "id": "<user_id>",
+    "firstname": "John",
+    "lastname": "Doe",
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+#### Error Responses
+
+1. **Validation Error:**
+   - **Status Code:** `400 Bad Request`
+   - **Description:** Input data is invalid.
+   - **Response Body:**
+   ```json
+   {
+     "errors": [
+       { "msg": "Invalid email", "param": "email", "location": "body" },
+       { "msg": "Password must be at least 6 characters long.", "param": "password", "location": "body" }
+     ]
+   }
+   ```
+
+2. **Invalid Credentials:**
+   - **Status Code:** `401 Unauthorized`
+   - **Description:** The email or password is incorrect.
+   - **Response Body:**
+   ```json
+   {
+     "message": "Invalid Email or Password"
+   }
+   ```
+
+3. **Internal Server Error:**
+   - **Status Code:** `500 Internal Server Error`
+   - **Description:** An error occurred on the server.
+   - **Response Body:**
+   ```json
+   {
+     "error": "Internal server error"
+   }
+   ```
+
+---
+
+### Notes
+- **Token Generation:** The response includes an authentication token for secure access to protected resources.
+- **Error Handling:** Descriptive error messages are provided to help debug issues.
+
+---
 
 
