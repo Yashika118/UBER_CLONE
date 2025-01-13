@@ -94,16 +94,6 @@ The request body must be sent in JSON format and include the following fields:
 
 ---
 
-### Notes
-- **Token Generation:** The response includes an authentication token for the user to access secure endpoints.
-- **Error Handling:** All errors include a descriptive message to help debug issues.
-
----
-
-
-
----
-
 ## `/users/login` Endpoint
 
 ### Endpoint Description
@@ -193,13 +183,6 @@ The request body must be sent in JSON format and include the following fields:
 
 ---
 
-### Notes
-- **Token Generation:** The response includes an authentication token for secure access to protected resources.
-- **Error Handling:** Descriptive error messages are provided to help debug issues.
-
----
-
-
 ## `/users/profile` Endpoint
 
 ### Endpoint Description
@@ -267,12 +250,6 @@ The `/users/profile` endpoint allows an authenticated user to fetch their profil
 
 ---
 
-### Notes
-- **Authorization Middleware:** This endpoint uses `authMiddleware` to verify and decode the JWT.
-- **Secure Cookies:** If the token is stored in a cookie, ensure it is HTTP-only and secure to prevent XSS attacks.
-
----
-
 
 ## `/users/logout` Endpoint
 
@@ -329,11 +306,121 @@ The `/users/logout` endpoint logs out an authenticated user by clearing their to
 
 ---
 
-### Notes
-- **Blacklist Handling:** The token is stored in the blacklist collection to ensure it cannot be reused.
-- **Token Clearing:** The `jwt` cookie is cleared on the client side.
+
+## `/captains/register` Endpoint
+
+### Endpoint Description
+The `/captains/register` endpoint allows new captains (drivers) to register by providing their personal and vehicle details. The endpoint validates the input data and creates a new captain in the system.
 
 ---
+
+### HTTP Method
+`POST`
+
+---
+
+### Request Body Format
+The request body must be sent in JSON format and include the following fields:
+
+#### Required Fields
+| Field                    | Type   | Description                                          |
+|--------------------------|--------|------------------------------------------------------|
+| `fullname.firstname`     | String | The first name of the captain (min. 3 characters)    |
+| `fullname.lastname`      | String | The last name of the captain (optional).             |
+| `email`                  | String | The email address of the captain (valid format).     |
+| `password`               | String | The password for the captain (min. 6 characters).    |
+| `vehicle.color`          | String | The color of the vehicle (min. 3 characters).        |
+| `vehicle.plate`          | String | The license plate of the vehicle (min. 3 characters).|
+| `vehicle.capacity`       | Number | The capacity of the vehicle (min. 1).                |
+| `vehicle.vehicleType`    | String | The type of vehicle (`car`, `motorcycle`, `auto`).   |
+
+#### Example Request Body
+```json
+{
+  "fullname": {
+    "firstname": "Jane",
+    "lastname": "Doe"
+  },
+  "email": "jane.doe@example.com",
+  "password": "securepassword",
+  "vehicle": {
+    "color": "Red",
+    "plate": "XYZ1234",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+---
+
+### Response
+
+#### Success Response
+- **Status Code:** `201 Created`
+- **Description:** The captain has been successfully registered.
+- **Response Body:**
+
+```json
+{
+  "token": "<auth_token>",
+  "captain": {
+    "id": "<captain_id>",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Doe"
+    },
+    "email": "jane.doe@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+#### Error Responses
+
+1. **Validation Error:**
+   - **Status Code:** `400 Bad Request`
+   - **Description:** Input data is invalid.
+   - **Response Body:**
+   ```json
+   {
+     "errors": [
+       { "msg": "Invalid email", "param": "email", "location": "body" },
+       { "msg": "First name must be at least 3 characters long.", "param": "fullname.firstname", "location": "body" }
+     ]
+   }
+   ```
+
+2. **Captain Already Exists:**
+   - **Status Code:** `400 Bad Request`
+   - **Description:** A captain with the provided email already exists.
+   - **Response Body:**
+   ```json
+   {
+     "message": "Captain already exists"
+   }
+   ```
+
+3. **Internal Server Error:**
+   - **Status Code:** `500 Internal Server Error`
+   - **Description:** An error occurred on the server.
+   - **Response Body:**
+   ```json
+   {
+     "error": "Internal server error"
+   }
+   ```
+
+---
+
+
+
+
 
 
 
