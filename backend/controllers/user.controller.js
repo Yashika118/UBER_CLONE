@@ -2,6 +2,7 @@ import userModel from "../models/user.model.js";
 import {createUser} from "../services/user.service.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
+import blackListTokenModel from "../models/blackListToken.model.js";
 
 
 //register
@@ -63,4 +64,14 @@ export const loginUser=async(req,res,next)=>{
 // for this we use authMiddleware.js
 export const getUserProfile=async(req,res,next)=>{
     res.status(200).json({user:req.user});
+}
+
+
+//logout
+export const logoutUser=async(req,res,next)=>{
+    res.clearCookie("jwt");
+    const token=req.cookies.jwt || req.headers.authorization.split(" ")[1];
+    const blackListToken=await blackListTokenModel({token});
+    await blackListToken.save();
+    res.status(200).json({message:"Logged out successfully"});
 }
