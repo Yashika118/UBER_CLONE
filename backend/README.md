@@ -46,7 +46,6 @@ The request body must be sent in JSON format and include the following fields:
 
 ```json
 {
-  "message": "User registered successfully",
   "token": "<auth_token>",
   "user": {
     "id": "<user_id>",
@@ -135,7 +134,6 @@ The request body must be sent in JSON format and include the following fields:
 
 ```json
 {
-  "message": "Login successful",
   "token": "<auth_token>",
   "user": {
     "id": "<user_id>",
