@@ -200,3 +200,77 @@ The request body must be sent in JSON format and include the following fields:
 ---
 
 
+## `/users/profile` Endpoint
+
+### Endpoint Description
+The `/users/profile` endpoint allows an authenticated user to fetch their profile information. This endpoint requires a valid authentication token.
+
+---
+
+### HTTP Method
+`GET`
+
+---
+
+### Authentication
+- This endpoint requires a valid JSON Web Token (JWT).
+- Include the token in the `Authorization` header as a Bearer token or in a `jwt` cookie.
+
+---
+
+### Request Headers
+| Header            | Value                   | Description                |
+|--------------------|-------------------------|---------------------------|
+| `Authorization`   | Bearer `<auth_token>`   | The JWT for authentication.|
+
+---
+
+### Response
+
+#### Success Response
+- **Status Code:** `200 OK`
+- **Description:** Successfully retrieved the user's profile.
+- **Response Body:**
+
+```json
+{
+  "user": {
+    "id": "<user_id>",
+    "firstname": "John",
+    "lastname": "Doe",
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+#### Error Responses
+
+1. **Unauthorized User:**
+   - **Status Code:** `401 Unauthorized`
+   - **Description:** The user is not authorized to access this endpoint (e.g., no valid token).
+   - **Response Body:**
+   ```json
+   {
+     "message": "Unauthorised User"
+   }
+   ```
+
+2. **Internal Server Error:**
+   - **Status Code:** `500 Internal Server Error`
+   - **Description:** An error occurred on the server.
+   - **Response Body:**
+   ```json
+   {
+     "error": "Internal server error"
+   }
+   ```
+
+---
+
+### Notes
+- **Authorization Middleware:** This endpoint uses `authMiddleware` to verify and decode the JWT.
+- **Secure Cookies:** If the token is stored in a cookie, ensure it is HTTP-only and secure to prevent XSS attacks.
+
+---
+
+
