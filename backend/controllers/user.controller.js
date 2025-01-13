@@ -3,6 +3,8 @@ import {createUser} from "../services/user.service.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 
+
+//register
 export const registerUser=async(req,res,next)=>{
     const errors=validationResult(req);             // /register router pe koi bhi condition glt hoti h toh yaha pe error dikhega
     if(!errors.isEmpty()){
@@ -27,6 +29,7 @@ export const registerUser=async(req,res,next)=>{
 }
 
 
+//login
 export const loginUser=async(req,res,next)=>{
     const errors=validationResult(req);             
     if(!errors.isEmpty()){
@@ -52,9 +55,12 @@ export const loginUser=async(req,res,next)=>{
     res.status(200).json({token,user});
 }
 
+
+//profile
+
 // agr user authorised h toh usko profile ka data de denge aur 
 // agr unauthorised h toh unko unauthorised bta denge
 // for this we use authMiddleware.js
 export const getUserProfile=async(req,res,next)=>{
-    
+    res.status(200).json({user:req.user});
 }
