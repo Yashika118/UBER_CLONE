@@ -1,6 +1,7 @@
 import express from 'express';
 import { body } from 'express-validator';
-import { registerCaptain } from '../controllers/captain.controller.js';
+import { getCaptainProfile, loginCaptain, logoutCaptain, registerCaptain } from '../controllers/captain.controller.js';
+import { authCaptain } from '../middleware/auth.middleware.js';
 
 const router=express.Router();
 
@@ -13,5 +14,17 @@ router.post("/register",[
     body("vehicle.capacity").isInt({min:1}).withMessage("Capacity must be atleast 1"),
     body("vehicle.vehicleType").isIn(["car","motorcycle","auto"]).withMessage("Invalid vehicle type"),
 ],registerCaptain);
+
+router.post("/login",[
+    body('email').isEmail().withMessage("Invalid email"),  
+    body("password").isLength({min:6}).withMessage("Password must be atleast 6 character long."),
+],loginCaptain);
+
+
+router.get("/profile",authCaptain,getCaptainProfile);
+
+router.get("/logout",authCaptain,logoutCaptain);
+
+
 
 export default router;

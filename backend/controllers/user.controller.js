@@ -48,7 +48,7 @@ export const loginUser=async(req,res,next)=>{
     const user=await userModel.findOne({email}).select("+password");
 
     if(!user){
-        return res.status(401).json({message:"Invalid Email or Password"});
+        return res.status(401).json({message:"User doesn't exist"});
     }
 
     const isMatch=await bcrypt.compare(password,user.password);
@@ -75,9 +75,9 @@ export const getUserProfile=async(req,res,next)=>{
 
 //logout
 export const logoutUser=async(req,res,next)=>{
-    res.clearCookie("jwt");
     const token=req.cookies.jwt || req.headers.authorization.split(" ")[1];
     const blackListToken=await blackListTokenModel({token});
     await blackListToken.save();
+    res.clearCookie("jwt");
     res.status(200).json({message:"Logged out successfully"});
 }
