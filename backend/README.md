@@ -274,3 +274,66 @@ The `/users/profile` endpoint allows an authenticated user to fetch their profil
 ---
 
 
+## `/users/logout` Endpoint
+
+### Endpoint Description
+The `/users/logout` endpoint logs out an authenticated user by clearing their token and adding it to the blacklist. This prevents further use of the token for authentication.
+
+---
+
+### HTTP Method
+`GET`
+
+---
+
+### Authentication
+- This endpoint requires a valid JSON Web Token (JWT).
+- The token can be sent as a Bearer token in the `Authorization` header or as a `jwt` cookie.
+
+---
+
+### Response
+
+#### Success Response
+- **Status Code:** `200 OK`
+- **Description:** Successfully logged out the user.
+- **Response Body:**
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### Error Responses
+
+1. **Unauthorized User:**
+   - **Status Code:** `401 Unauthorized`
+   - **Description:** No valid token was provided.
+   - **Response Body:**
+   ```json
+   {
+     "message": "Unauthorised User"
+   }
+   ```
+
+2. **Internal Server Error:**
+   - **Status Code:** `500 Internal Server Error`
+   - **Description:** An error occurred on the server.
+   - **Response Body:**
+   ```json
+   {
+     "error": "Internal server error"
+   }
+   ```
+
+---
+
+### Notes
+- **Blacklist Handling:** The token is stored in the blacklist collection to ensure it cannot be reused.
+- **Token Clearing:** The `jwt` cookie is cleared on the client side.
+
+---
+
+
+
