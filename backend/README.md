@@ -416,6 +416,238 @@ The request body must be sent in JSON format and include the following fields:
 
 ---
 
+## `/captains/login` Endpoint
+
+### Endpoint Description
+The `/captains/login` endpoint allows captains to authenticate by providing their email and password. The endpoint validates the credentials and returns a token upon successful login.
+
+---
+
+### HTTP Method
+`POST`
+
+---
+
+### Request Body Format
+The request body must be sent in JSON format and include the following fields:
+
+#### Required Fields
+| Field   | Type   | Description                                     |
+|---------|--------|-------------------------------------------------|
+| `email` | String | The email address of the captain (valid format).|
+| `password`| String | The password for the captain (min. 6 characters).|
+
+#### Example Request Body
+```json
+{
+  "email": "jane.doe@example.com",
+  "password": "securepassword"
+}
+```
+
+---
+
+### Response
+
+#### Success Response
+- **Status Code:** `200 OK`
+- **Description:** Captain successfully logged in.
+- **Response Body:**
+
+```json
+{
+  "token": "<auth_token>",
+  "captain": {
+    "id": "<captain_id>",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Doe"
+    },
+    "email": "jane.doe@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+#### Error Responses
+
+1. **Validation Error:**
+   - **Status Code:** `400 Bad Request`
+   - **Description:** Input data is invalid.
+   - **Response Body:**
+   ```json
+   {
+     "errors": [
+       { "msg": "Invalid email", "param": "email", "location": "body" },
+       { "msg": "Password must be at least 6 characters long.", "param": "password", "location": "body" }
+     ]
+   }
+   ```
+
+2. **Captain Not Found:**
+   - **Status Code:** `400 Bad Request`
+   - **Description:** No captain found with the provided email.
+   - **Response Body:**
+   ```json
+   {
+     "message": "Captain doesn't exist"
+   }
+   ```
+
+3. **Invalid Credentials:**
+   - **Status Code:** `400 Bad Request`
+   - **Description:** The email or password is incorrect.
+   - **Response Body:**
+   ```json
+   {
+     "message": "Invalid email or password"
+   }
+   ```
+
+4. **Internal Server Error:**
+   - **Status Code:** `500 Internal Server Error`
+   - **Description:** An error occurred on the server.
+   - **Response Body:**
+   ```json
+   {
+     "error": "Internal server error"
+   }
+   ```
+
+---
+
+## `/captains/profile` Endpoint
+
+### Endpoint Description
+The `/captains/profile` endpoint allows an authenticated captain to fetch their profile information. This endpoint requires a valid authentication token.
+
+---
+
+### HTTP Method
+`GET`
+
+---
+
+### Authentication
+- This endpoint requires a valid JSON Web Token (JWT).
+- Include the token in the `Authorization` header as a Bearer token or in a `jwt` cookie.
+
+---
+
+### Request Headers
+| Header            | Value                   | Description                |
+|--------------------|-------------------------|---------------------------|
+| `Authorization`   | Bearer `<auth_token>`   | The JWT for authentication.|
+
+---
+
+### Response
+
+#### Success Response
+- **Status Code:** `200 OK`
+- **Description:** Successfully retrieved the captain's profile.
+- **Response Body:**
+
+```json
+{
+  "id": "<captain_id>",
+  "fullname": {
+    "firstname": "Jane",
+    "lastname": "Doe"
+  },
+  "email": "jane.doe@example.com",
+  "vehicle": {
+    "color": "Red",
+    "plate": "XYZ1234",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+#### Error Responses
+
+1. **Unauthorized Captain:**
+   - **Status Code:** `401 Unauthorized`
+   - **Description:** The captain is not authorized to access this endpoint (e.g., no valid token).
+   - **Response Body:**
+   ```json
+   {
+     "message": "Unauthorised Captain"
+   }
+   ```
+
+2. **Internal Server Error:**
+   - **Status Code:** `500 Internal Server Error`
+   - **Description:** An error occurred on the server.
+   - **Response Body:**
+   ```json
+   {
+     "error": "Internal server error"
+   }
+   ```
+
+---
+
+## `/captains/logout` Endpoint
+
+### Endpoint Description
+The `/captains/logout` endpoint logs out an authenticated captain by clearing their token and adding it to the blacklist. This prevents further use of the token for authentication.
+
+---
+
+### HTTP Method
+`GET`
+
+---
+
+### Authentication
+- This endpoint requires a valid JSON Web Token (JWT).
+- The token can be sent as a Bearer token in the `Authorization` header or as a `jwt` cookie.
+
+---
+
+### Response
+
+#### Success Response
+- **Status Code:** `200 OK`
+- **Description:** Successfully logged out the captain.
+- **Response Body:**
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### Error Responses
+
+1. **Unauthorized Captain:**
+   - **Status Code:** `401 Unauthorized`
+   - **Description:** No valid token was provided.
+   - **Response Body:**
+   ```json
+   {
+     "message": "Unauthorised Captain"
+   }
+   ```
+
+2. **Internal Server Error:**
+   - **Status Code:** `500 Internal Server Error`
+   - **Description:** An error occurred on the server.
+   - **Response Body:**
+   ```json
+   {
+     "error": "Internal server error"
+   }
+   ```
+
+---
 
 
 
