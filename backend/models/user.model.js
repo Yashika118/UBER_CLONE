@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+
 // user schema
 
 const userSchema=new mongoose.Schema({
@@ -36,8 +37,14 @@ const userSchema=new mongoose.Schema({
 
 // user schema pe hum methods use krenge
 
-userSchema.methods.generateAuthToken=function(){
-    const token = jwt.sign({_id:this._id},process.env.JWT_SECRET);
+userSchema.methods.generateAuthToken=function(res){
+    const token = jwt.sign({_id:this._id},process.env.JWT_SECRET,{expiresIn:"7d"});
+    // we use cookie to store our token on browser
+    res.cookie("jwt",token,{
+        maxAge:7*24*60*60*1000,             // mili seconds
+        httpOnly:true,                      // prevent xss cross site scripting attacks
+        secure:process.env.NODE_ENV!=="development", 
+    });
     return token;
 }
 

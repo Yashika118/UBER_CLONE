@@ -20,7 +20,7 @@ export const registerUser=async(req,res,next)=>{
         password:hashedPassword
     });
     await user.save();
-    const token=user.generateAuthToken();
+    const token=user.generateAuthToken(res);
 
     res.status(201).json({token,user});
 
@@ -47,7 +47,14 @@ export const loginUser=async(req,res,next)=>{
         return res.status(401).json({message:"Invalid Email or Password"});
     }
 
-    const token=user.generateAuthToken();
+    const token=user.generateAuthToken(res);
 
     res.status(200).json({token,user});
+}
+
+// agr user authorised h toh usko profile ka data de denge aur 
+// agr unauthorised h toh unko unauthorised bta denge
+// for this we use authMiddleware.js
+export const getUserProfile=async(req,res,next)=>{
+    
 }
