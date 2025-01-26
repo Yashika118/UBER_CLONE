@@ -9,6 +9,7 @@ import VehiclePanel from '../components/VehiclePanel.jsx';
 import ConfirmedRide from '../components/ConfirmedRide.jsx';
 import WaitingForDriver from '../components/WaitingForDriver.jsx';
 import LookingForDriver from '../components/LookingForDriver.jsx';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
 
@@ -106,7 +107,17 @@ const Home = () => {
 
   return (
     <div className='h-screen relative overflow-hidden'>
-      <img className='w-16 absolute left-5 top-5' src={Uber_Logo} />
+      {/* <img className='w-16 absolute left-5 top-5' src={Uber_Logo} /> */}
+      <div className='fixed p-3 top-0 gap-14 flex flex-col  justify-between w-full'>
+        <Link to="/home">
+          <img className='w-16 absolute left-5 top-5' src={Uber_Logo} />
+        </Link>
+
+        <Link to="/logout" className='h-10 w-10 ml-3 bg-red-600 flex items-center justify-center rounded-full'>
+          <i className=" text-xl font-semibold text-white ri-logout-box-line"></i>
+        </Link>
+      </div>
+
 
       {/*Uber Map Image */}
       <div  className='h-screen w-screen'>
